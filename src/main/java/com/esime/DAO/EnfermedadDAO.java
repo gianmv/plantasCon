@@ -23,7 +23,7 @@ public class EnfermedadDAO extends Extraer<Enfermedad> {
     public Collection<Enfermedad> getTodos() {
         try {
             con = UConnection.getConnection();
-            String sql = "SELECT ID_ENFER,NOM_ENFER,NOM_CIEN_ENFER FROM ENFERMEDAD";
+            String sql = "SELECT ID_ENFER,NOM_ENFER,NOM_CIEN_ENFER,ID_SINTO FROM ENFERMEDAD";
             
             pstm = con.prepareStatement(sql);
             
@@ -37,6 +37,7 @@ public class EnfermedadDAO extends Extraer<Enfermedad> {
                 enfe.setId_enfer(rs.getBigDecimal("ID_ENFER"));
                 enfe.setNom_cien_enfer(rs.getString("NOM_CIEN_ENFER"));
                 enfe.setNom_efer(rs.getString("NOM_ENFER"));
+                enfe.setId_sinto(rs.getBigDecimal("ID_SINTO"));
                 ret.add(enfe);
             }
             return ret;            
@@ -57,7 +58,7 @@ public class EnfermedadDAO extends Extraer<Enfermedad> {
     public Collection<Enfermedad> getPorID(int id) {
         try {
             con = UConnection.getConnection();
-            String sql = "SELECT ID_ENFER,NOM_ENFER,NOM_CIEN_ENFER FROM ENFERMEDAD";
+            String sql = "SELECT ID_ENFER,NOM_ENFER,NOM_CIEN_ENFER,ID_SINTO FROM ENFERMEDAD";
             sql+=" WHERE ID_ENFER = ?";
             pstm = con.prepareStatement(sql);
             pstm.setBigDecimal(1,new BigDecimal(id));
@@ -71,6 +72,7 @@ public class EnfermedadDAO extends Extraer<Enfermedad> {
                 enfe.setId_enfer(rs.getBigDecimal("ID_ENFER"));
                 enfe.setNom_cien_enfer(rs.getString("NOM_CIEN_ENFER"));
                 enfe.setNom_efer(rs.getString("NOM_ENFER"));
+                enfe.setId_sinto(rs.getBigDecimal("ID_SINTO"));
                 ret.add(enfe);
             }
             return ret;            
@@ -95,14 +97,16 @@ public class EnfermedadDAO extends Extraer<Enfermedad> {
             String sql = "UPDATE ENFERMEDAD SET "
                     + "ID_ENFER = ?, "
                     + "NOM_ENFER = ?, "
-                    + "NOM_CIEN_ENFER = ? "
+                    + "NOM_CIEN_ENFER = ?,"
+                    + "ID_SINTO = ? "
                     + "WHERE ID_ENFER = ?";
             
             pstm = con.prepareStatement(sql);
             pstm.setBigDecimal(1, ele.getId_enfer());
             pstm.setString(2, ele.getNom_efer());
             pstm.setString(3, ele.getNom_cien_enfer());
-            pstm.setBigDecimal(4, ele.getId_enfer());
+            pstm.setBigDecimal(4, ele.getId_sinto());
+            pstm.setBigDecimal(5, ele.getId_enfer());
                 
             int filasAfectadas = pstm.executeUpdate();
 
@@ -134,14 +138,16 @@ public class EnfermedadDAO extends Extraer<Enfermedad> {
             String sql = "UPDATE ENFERMEDAD SET "
                     + "ID_ENFER = ?, "
                     + "NOM_ENFER = ?, "
-                    + "NOM_CIEN_ENFER = ? "
+                    + "NOM_CIEN_ENFER = ?,"
+                    + "ID_SINTO = ? "
                     + "WHERE ID_ENFER = ?";
             pstm = con.prepareStatement(sql);
             for(Enfermedad ele: elementos){
                 pstm.setBigDecimal(1, ele.getId_enfer());
                 pstm.setString(2, ele.getNom_efer());
                 pstm.setString(3, ele.getNom_cien_enfer());
-                pstm.setBigDecimal(4, ele.getId_enfer());
+                pstm.setBigDecimal(4, ele.getId_sinto());
+                pstm.setBigDecimal(5, ele.getId_enfer());
                 int filasAfectadas = pstm.executeUpdate();
 
                 if (filasAfectadas == 1) {

@@ -23,7 +23,7 @@ public class SintomasDAO extends Extraer<Sintomas>{
     public Collection<Sintomas> getTodos() {
         try {
             con = UConnection.getConnection();
-            String sql = "SELECT ID_SINTO,NOM_SINTO, NOM_CIEN_ENFER FROM SINTOMAS";
+            String sql = "SELECT ID_SINTO,NOM_SINTO FROM SINTOMAS";
             
             pstm = con.prepareStatement(sql);
             
@@ -36,7 +36,6 @@ public class SintomasDAO extends Extraer<Sintomas>{
                 sinto = new Sintomas();
                 sinto.setId_sinto(rs.getBigDecimal("ID_SINTO"));
                 sinto.setNom_sinto(rs.getString("NOM_SINTO"));
-                sinto.setNom_cien_enfer(rs.getString("NOM_CIEN_ENFER"));
                 ret.add(sinto);
             }
             return ret;            
@@ -57,7 +56,7 @@ public class SintomasDAO extends Extraer<Sintomas>{
     public Collection<Sintomas> getPorID(int id) {
         try {
             con = UConnection.getConnection();
-            String sql = "SELECT ID_SINTO,NOM_SINTO, NOM_CIEN_ENFER FROM SINTOMAS WHERE ID_SINTO = ?";
+            String sql = "SELECT ID_SINTO,NOM_SINTO FROM SINTOMAS WHERE ID_SINTO = ?";
             
             pstm = con.prepareStatement(sql);
             pstm.setBigDecimal(1, new BigDecimal(id));
@@ -70,7 +69,6 @@ public class SintomasDAO extends Extraer<Sintomas>{
                 sinto = new Sintomas();
                 sinto.setId_sinto(rs.getBigDecimal("ID_SINTO"));
                 sinto.setNom_sinto(rs.getString("NOM_SINTO"));
-                sinto.setNom_cien_enfer(rs.getString("NOM_CIEN_ENFER"));
                 ret.add(sinto);
             }
             
@@ -95,15 +93,13 @@ public class SintomasDAO extends Extraer<Sintomas>{
             con.setAutoCommit(false);
             String sql = "UPDATE SINTOMAS SET "
                     + "ID_SINTO = ?, "
-                    + "NOM_SINTO = ?, "
-                    + "NOM_CIEN_ENFER = ? "
+                    + "NOM_SINTO = ? "
                     + "WHERE ID_SINTO = ?";
 
             pstm = con.prepareStatement(sql);
             pstm.setBigDecimal(1, ele.getId_sinto());
             pstm.setString(2, ele.getNom_sinto());
-            pstm.setString(3, ele.getNom_cien_enfer());
-            pstm.setBigDecimal(4, ele.getId_sinto());
+            pstm.setBigDecimal(3, ele.getId_sinto());
             int filasAfectadas = pstm.executeUpdate();
 
             if(filasAfectadas == 1){
@@ -134,16 +130,14 @@ public class SintomasDAO extends Extraer<Sintomas>{
             con.setAutoCommit(false);
             String sql = "UPDATE SINTOMAS SET "
                     + "ID_SINTO = ?, "
-                    + "NOM_SINTO = ?, "
-                    + "NOM_CIEN_ENFER = ? "
+                    + "NOM_SINTO = ? "
                     + "WHERE ID_SINTO = ?";
             pstm = con.prepareStatement(sql);
             for(Sintomas ele: elementos){
                 pstm = con.prepareStatement(sql);
                 pstm.setBigDecimal(1, ele.getId_sinto());
                 pstm.setString(2, ele.getNom_sinto());
-                pstm.setString(3, ele.getNom_cien_enfer());
-                pstm.setBigDecimal(4, ele.getId_sinto());
+                pstm.setBigDecimal(3, ele.getId_sinto());
                 int filasAfectadas = pstm.executeUpdate();
 
                 if (filasAfectadas == 1) {
