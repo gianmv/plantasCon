@@ -6,6 +6,7 @@
 package com.esime.DAO;
 
 import com.esime.DTO.Enfermedad;
+import com.esime.DTO.Sintomas;
 import com.esime.plantascons.UConnection;
 import java.math.BigDecimal;
 import java.sql.SQLException;
@@ -36,8 +37,10 @@ public class EnfermedadDAO extends Extraer<Enfermedad> {
                 enfe = new Enfermedad();
                 enfe.setId_enfer(rs.getBigDecimal("ID_ENFER"));
                 enfe.setNom_cien_enfer(rs.getString("NOM_CIEN_ENFER"));
-                enfe.setNom_efer(rs.getString("NOM_ENFER"));
-                enfe.setId_sinto(rs.getBigDecimal("ID_SINTO"));
+                enfe.setNom_enfer(rs.getString("NOM_ENFER"));
+                //Tenemos que crear un objeto de tipo sintoma
+                int idSinto = rs.getBigDecimal("ID_SINTO").intValue();
+                enfe.setSintoma(getSintoma(idSinto));
                 ret.add(enfe);
             }
             return ret;            
@@ -71,8 +74,10 @@ public class EnfermedadDAO extends Extraer<Enfermedad> {
                 enfe = new Enfermedad();
                 enfe.setId_enfer(rs.getBigDecimal("ID_ENFER"));
                 enfe.setNom_cien_enfer(rs.getString("NOM_CIEN_ENFER"));
-                enfe.setNom_efer(rs.getString("NOM_ENFER"));
-                enfe.setId_sinto(rs.getBigDecimal("ID_SINTO"));
+                enfe.setNom_enfer(rs.getString("NOM_ENFER"));
+                //Tenemos que crear un objeto de tipo sintoma
+                int idSinto = rs.getBigDecimal("ID_SINTO").intValue();
+                enfe.setSintoma(getSintoma(idSinto));
                 ret.add(enfe);
             }
             return ret;            
@@ -103,9 +108,9 @@ public class EnfermedadDAO extends Extraer<Enfermedad> {
             
             pstm = con.prepareStatement(sql);
             pstm.setBigDecimal(1, ele.getId_enfer());
-            pstm.setString(2, ele.getNom_efer());
+            pstm.setString(2, ele.getNom_enfer());
             pstm.setString(3, ele.getNom_cien_enfer());
-            pstm.setBigDecimal(4, ele.getId_sinto());
+            pstm.setBigDecimal(4, ele.getSintoma().getId_sinto());
             pstm.setBigDecimal(5, ele.getId_enfer());
                 
             int filasAfectadas = pstm.executeUpdate();
@@ -144,9 +149,9 @@ public class EnfermedadDAO extends Extraer<Enfermedad> {
             pstm = con.prepareStatement(sql);
             for(Enfermedad ele: elementos){
                 pstm.setBigDecimal(1, ele.getId_enfer());
-                pstm.setString(2, ele.getNom_efer());
+                pstm.setString(2, ele.getNom_enfer());
                 pstm.setString(3, ele.getNom_cien_enfer());
-                pstm.setBigDecimal(4, ele.getId_sinto());
+                pstm.setBigDecimal(4, ele.getSintoma().getId_sinto());
                 pstm.setBigDecimal(5, ele.getId_enfer());
                 int filasAfectadas = pstm.executeUpdate();
 
@@ -173,12 +178,62 @@ public class EnfermedadDAO extends Extraer<Enfermedad> {
 
     @Override
     public boolean insertElemento(Enfermedad ele) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            con = UConnection.getConnection();
+            con.setAutoCommit(false);
+            String sql = "INSERT INTO ENFERMEDAD VALUES( ?, ?,?,?) ";
+
+            pstm = con.prepareStatement(sql);
+            pstm.setBigDecimal(1, ele.getId_enfer());
+            pstm.setString(2, ele.getNom_enfer());
+            pstm.setString(3, ele.getNom_cien_enfer());
+            pstm.setBigDecimal(4, ele.getSintoma().getId_sinto());
+            pstm.executeUpdate();
+            con.commit();
+            return true;
+            }catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Error al actualizar");
+            return false;
+        }finally{
+                try {
+                    if(con!=null) con.rollback();
+                    if(pstm!=null) pstm.close();
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+        }
     }
 
     @Override
     public boolean insertConjunto(Collection<Enfermedad> ele) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            con = UConnection.getConnection();
+            con.setAutoCommit(false);
+            String sql = "INSERT INTO ENFERMEDAD VALUES( ?, ?,?,?) ";
+            
+            for(Enfermedad x: ele){
+                pstm = con.prepareStatement(sql);
+                pstm.setBigDecimal(1, x.getId_enfer());
+                pstm.setString(2, x.getNom_enfer());
+                pstm.setString(3, x.getNom_cien_enfer());
+                pstm.setBigDecimal(4, x.getSintoma().getId_sinto());
+                pstm.executeUpdate();
+            }
+            con.commit();
+            return true;
+            }catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Error al actualizar");
+            return false;
+        }finally{
+                try {
+                    if(con!=null) con.rollback();
+                    if(pstm!=null) pstm.close();
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+        }
     }
 
     @Override
@@ -189,6 +244,13 @@ public class EnfermedadDAO extends Extraer<Enfermedad> {
     @Override
     public boolean deleteConjunto(Collection<Enfermedad> ele) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private Sintomas getSintoma(int idSinto) {
+       ArrayList<Sintomas> temp;
+       SintomasDAO t = new SintomasDAO();
+       temp = (ArrayList<Sintomas>) t.getPorID(idSinto);
+       return temp.get(0);
     }
     
 }

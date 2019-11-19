@@ -249,12 +249,57 @@ public class EnferUsuaDAO extends Extraer<EnferUsua>{
 
     @Override
     public boolean insertElemento(EnferUsua ele) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            con = UConnection.getConnection();
+            con.setAutoCommit(false);
+            String sql = "INSERT INTO ENFER_USUA VALUES( ?, ?) ";
+
+            pstm = con.prepareStatement(sql);
+            pstm.setBigDecimal(1, ele.getEnfer().getId_enfer());
+            pstm.setBigDecimal(2, ele.getUsua().getId_usua());
+            pstm.executeUpdate();
+            con.commit();
+            return true;
+            }catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Error al actualizar");
+            return false;
+        }finally{
+                try {
+                    if(con!=null) con.rollback();
+                    if(pstm!=null) pstm.close();
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+        }
     }
 
     @Override
     public boolean insertConjunto(Collection<EnferUsua> ele) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            con = UConnection.getConnection();
+            con.setAutoCommit(false);
+            String sql = "INSERT INTO ENFER_USUA VALUES( ?, ?) ";
+            pstm = con.prepareStatement(sql);
+            for(EnferUsua x: ele){
+                pstm.setBigDecimal(1, x.getEnfer().getId_enfer());
+                pstm.setBigDecimal(2, x.getUsua().getId_usua());
+                pstm.executeUpdate();
+            }
+            con.commit();
+            return true;
+            }catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Error al actualizar");
+            return false;
+        }finally{
+                try {
+                    if(con!=null) con.rollback();
+                    if(pstm!=null) pstm.close();
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+        }
     }
 
     @Override

@@ -168,12 +168,58 @@ public class ColorDAO extends Extraer<Color>{
 
     @Override
     public boolean insertElemento(Color ele) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            con = UConnection.getConnection();
+            con.setAutoCommit(false);
+            String sql = "INSERT INTO COLOR VALUES( ?, ?) ";
+
+            pstm = con.prepareStatement(sql);
+            pstm.setBigDecimal(1, ele.getId_color());
+            pstm.setString(2, ele.getNom_color());
+            pstm.executeUpdate();
+            con.commit();
+            return true;
+            }catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Error al actualizar");
+            return false;
+        }finally{
+                try {
+                    if(con!=null) con.rollback();
+                    if(pstm!=null) pstm.close();
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+        }
     }
 
     @Override
     public boolean insertConjunto(Collection<Color> ele) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            con = UConnection.getConnection();
+            con.setAutoCommit(false);
+            String sql = "INSERT INTO COLOR VALUES( ?, ?) ";
+
+            for(Color x:ele){
+                pstm = con.prepareStatement(sql);
+                pstm.setBigDecimal(1, x.getId_color());
+                pstm.setString(2, x.getNom_color());
+                pstm.executeUpdate();
+            }
+            con.commit();
+            return true;
+            }catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Error al actualizar");
+            return false;
+        }finally{
+                try {
+                    if(con!=null) con.rollback();
+                    if(pstm!=null) pstm.close();
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+        }
     }
 
     @Override

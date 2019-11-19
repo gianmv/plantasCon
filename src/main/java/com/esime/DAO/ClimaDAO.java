@@ -182,15 +182,13 @@ public class ClimaDAO extends Extraer<Clima>{
         try {
             con = UConnection.getConnection();
             con.setAutoCommit(false);
-            ArrayList<BigDecimal> ids = getTodosLosId();
             String sql = "INSERT INTO CLIMA VALUES( ?, ?) ";
 
             pstm = con.prepareStatement(sql);
             pstm.setBigDecimal(1, ele.getId_clima());
             pstm.setString(2, ele.getNom_clima());
-            pstm.setBigDecimal(3, ele.getId_clima());
             pstm.executeUpdate();
-            
+            con.commit();
             return true;
             }catch (Exception e) {
             e.printStackTrace();
@@ -208,7 +206,32 @@ public class ClimaDAO extends Extraer<Clima>{
 
     @Override
     public boolean insertConjunto(Collection<Clima> ele) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            con = UConnection.getConnection();
+            con.setAutoCommit(false);
+            ArrayList<BigDecimal> ids = getTodosLosId();
+            String sql = "INSERT INTO CLIMA VALUES( ?, ?) ";
+            
+            for(Clima x: ele){
+                pstm = con.prepareStatement(sql);
+                pstm.setBigDecimal(1, x.getId_clima());
+                pstm.setString(2, x.getNom_clima());
+                pstm.executeUpdate();
+            }
+            con.commit();
+            return true;
+            }catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Error al actualizar");
+            return false;
+        }finally{
+                try {
+                    if(con!=null) con.rollback();
+                    if(pstm!=null) pstm.close();
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+        }
     }
 
     @Override

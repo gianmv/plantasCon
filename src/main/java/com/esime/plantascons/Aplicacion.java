@@ -18,16 +18,26 @@ import java.util.Collection;
  */
 public class Aplicacion {
     public static void main(String[] args) {
-        SintomasDAO example = new SintomasDAO();
-        ArrayList<Sintomas> res = (ArrayList<Sintomas>) example.getTodos();
-        for(Sintomas i: res){
+        EnfermedadDAO example = new EnfermedadDAO();
+        ArrayList<Enfermedad> res = (ArrayList<Enfermedad>) example.getTodos();
+        for(Enfermedad i: res){
             System.out.println(i);
         }
         
-        res.get(0).setNom_sinto("Calambre abdominal");
-        res.get(3).setNom_sinto("Miedo a aumentar de peso");      
-        boolean verdad =example.setConjunto(res);
-        System.out.println(verdad);
+        ArrayList<Enfermedad> inser = new ArrayList<>();
+        Enfermedad x1 = res.get(0);
+        x1.setId_enfer(new BigDecimal(111));
+        x1.setNom_enfer("Gatos con patas");
+        x1.setNom_cien_enfer("G");
+        Enfermedad x2 = res.get(3);
+        x2.setId_enfer(new BigDecimal(112));
+        x2.setNom_enfer("Perros con garras");
+        inser.add(x1);
+        inser.add(x2);
+        
+        example.insertConjunto(inser);
+        
+        
         
         /*
         try {
