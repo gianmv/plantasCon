@@ -195,12 +195,68 @@ public class UsuariosDAO extends Extraer<Usuarios>{
 
     @Override
     public boolean insertElemento(Usuarios ele) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            con = UConnection.getConnection();
+            con.setAutoCommit(false);
+            String sql = "INSERT INTO USUARIOS VALUES(?,?,?,?,?,?,?) ";
+
+            pstm = con.prepareStatement(sql);
+            pstm.setBigDecimal(1, ele.getId_usua());
+            pstm.setString(2, ele.getNom_usua());
+            pstm.setString(3, ele.getPriape_usua());
+            pstm.setString(4, ele.getSegape_usua());
+            pstm.setString(5, ele.getNom_adminis());
+            pstm.setString(6, ele.getContrasenia());
+            pstm.setString(7, ele.getCorreo());
+            pstm.executeUpdate();
+            con.commit();
+            return true;
+            }catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Error al actualizar");
+            return false;
+        }finally{
+                try {
+                    if(con!=null) con.rollback();
+                    if(pstm!=null) pstm.close();
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+        }
     }
 
     @Override
     public boolean insertConjunto(Collection<Usuarios> ele) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            con = UConnection.getConnection();
+            con.setAutoCommit(false);
+            String sql = "INSERT INTO USUARIOS VALUES(?,?,?,?,?,?,?) ";
+            
+            for(Usuarios x: ele){
+                pstm = con.prepareStatement(sql);
+                pstm.setBigDecimal(1, x.getId_usua());
+                pstm.setString(2, x.getNom_usua());
+                pstm.setString(3, x.getPriape_usua());
+                pstm.setString(4, x.getSegape_usua());
+                pstm.setString(5, x.getNom_adminis());
+                pstm.setString(6, x.getContrasenia());
+                pstm.setString(7, x.getCorreo());
+                pstm.executeUpdate();
+                con.commit();
+            }
+            return true;
+            }catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Error al actualizar");
+            return false;
+        }finally{
+                try {
+                    if(con!=null) con.rollback();
+                    if(pstm!=null) pstm.close();
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+        }
     }
 
     @Override

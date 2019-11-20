@@ -338,12 +338,88 @@ public class PlantaDAO extends Extraer<Planta>{
 
     @Override
     public boolean insertElemento(Planta ele) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            con = UConnection.getConnection();
+            con.setAutoCommit(false);
+            String sql = "INSERT INTO PLANTA VALUES( ?, ?,?, ?,?, ?,?, ?,?, ?,?, ?,?, ?,?, ?,?) ";
+
+            pstm = con.prepareStatement(sql);
+            pstm.setBigDecimal(1, ele.getId_plan());
+            pstm.setString(2, ele.getNom_plan());
+            pstm.setString(3, ele.getNom_cien_plan());
+            pstm.setString(4, ele.getFam_plan());
+            pstm.setBlob(5, ele.getImg_plan());
+            pstm.setString(6, ele.getCat_plan());
+            pstm.setBigDecimal(7, ele.getAlt_suelo());
+            pstm.setString(8, ele.getUso_plan());
+            pstm.setBigDecimal(9, ele.getTam_plan());
+            pstm.setString(10, ele.getTiem_creci());
+            pstm.setBigDecimal(11, ele.getClim().getId_clima());
+            pstm.setBigDecimal(12, ele.getRegi().getId_reg());
+            pstm.setBigDecimal(13, ele.getHume().getId_hume());
+            pstm.setBigDecimal(14, ele.getTempo().getId_tempo());
+            pstm.setBigDecimal(15, ele.getColor().getId_color());
+            pstm.setBigDecimal(16, ele.getText().getId_text());
+            pstm.setBigDecimal(17, ele.getEnf().getId_enfer());
+            pstm.executeUpdate();
+            con.commit();
+            return true;
+            }catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Error al actualizar");
+            return false;
+        }finally{
+                try {
+                    if(con!=null) con.rollback();
+                    if(pstm!=null) pstm.close();
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+        }
     }
 
     @Override
     public boolean insertConjunto(Collection<Planta> ele) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            con = UConnection.getConnection();
+            con.setAutoCommit(false);
+            String sql = "INSERT INTO PLANTA VALUES( ?, ?,?, ?,?, ?,?, ?,?, ?,?, ?,?, ?,?, ?,?) ";
+            
+            for(Planta x : ele){
+                pstm = con.prepareStatement(sql);
+                pstm.setBigDecimal(1, x.getId_plan());
+                pstm.setString(2, x.getNom_plan());
+                pstm.setString(3, x.getNom_cien_plan());
+                pstm.setString(4, x.getFam_plan());
+                pstm.setBlob(5, x.getImg_plan());
+                pstm.setString(6, x.getCat_plan());
+                pstm.setBigDecimal(7, x.getAlt_suelo());
+                pstm.setString(8, x.getUso_plan());
+                pstm.setBigDecimal(9, x.getTam_plan());
+                pstm.setString(10, x.getTiem_creci());
+                pstm.setBigDecimal(11, x.getClim().getId_clima());
+                pstm.setBigDecimal(12, x.getRegi().getId_reg());
+                pstm.setBigDecimal(13, x.getHume().getId_hume());
+                pstm.setBigDecimal(14, x.getTempo().getId_tempo());
+                pstm.setBigDecimal(15, x.getColor().getId_color());
+                pstm.setBigDecimal(16, x.getText().getId_text());
+                pstm.setBigDecimal(17, x.getEnf().getId_enfer());
+                pstm.executeUpdate();
+                con.commit();
+            }
+            return true;
+            }catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Error al actualizar");
+            return false;
+        }finally{
+                try {
+                    if(con!=null) con.rollback();
+                    if(pstm!=null) pstm.close();
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+        }
     }
 
     @Override
