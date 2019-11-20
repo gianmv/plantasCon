@@ -424,12 +424,67 @@ public class PlantaDAO extends Extraer<Planta>{
 
     @Override
     public boolean deleteElemento(Planta ele) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            con = UConnection.getConnection();
+            con.setAutoCommit(false);
+            String sql = "DELETE FROM PLANTA WHERE ID_PLAN = ?";
+
+            pstm = con.prepareStatement(sql);
+            pstm.setBigDecimal(1, ele.getId_plan());
+            int filasAfectadas = pstm.executeUpdate();
+            if(filasAfectadas == 1){
+                con.commit();
+                return true;
+            }else{
+                throw new SQLException();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Error al actualizar");
+            return false;
+        }finally{
+                try {
+                    if(con!=null) con.rollback();
+                    if(pstm!=null) pstm.close();
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+            
+        }
     }
 
     @Override
     public boolean deleteConjunto(Collection<Planta> ele) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            con = UConnection.getConnection();
+            con.setAutoCommit(false);
+            String sql = "DELETE FROM PLANTA WHERE ID_PLAN = ?";
+            
+            for(Planta x:ele){
+                pstm = con.prepareStatement(sql);
+                pstm.setBigDecimal(1, x.getId_plan());
+                int filasAfectadas = pstm.executeUpdate();
+                if (filasAfectadas == 1) {
+                    con.commit();
+
+                } else {
+                    throw new SQLException();
+                }
+            }
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Error al actualizar");
+            return false;
+        }finally{
+                try {
+                    if(con!=null) con.rollback();
+                    if(pstm!=null) pstm.close();
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+            
+        }
     }
     
 }

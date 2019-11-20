@@ -219,12 +219,66 @@ public class RegionDAO extends Extraer<Region>{
 
     @Override
     public boolean deleteElemento(Region ele) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            con = UConnection.getConnection();
+            con.setAutoCommit(false);
+            String sql = "DELETE FROM REGION WHERE ID_REG = ?";
+
+            pstm = con.prepareStatement(sql);
+            pstm.setBigDecimal(1, ele.getId_reg());
+            int filasAfectadas = pstm.executeUpdate();
+            if(filasAfectadas == 1){
+                con.commit();
+                return true;
+            }else{
+                throw new SQLException();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Error al actualizar");
+            return false;
+        }finally{
+                try {
+                    if(con!=null) con.rollback();
+                    if(pstm!=null) pstm.close();
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+            
+        }
     }
 
     @Override
     public boolean deleteConjunto(Collection<Region> ele) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            con = UConnection.getConnection();
+            con.setAutoCommit(false);
+            String sql = "DELETE FROM REGION WHERE ID_REG = ?";
+            for(Region x:ele){
+                pstm = con.prepareStatement(sql);
+                pstm.setBigDecimal(1, x.getId_reg());
+                int filasAfectadas = pstm.executeUpdate();
+                if (filasAfectadas == 1) {
+                    con.commit();
+
+                } else {
+                    throw new SQLException();
+                }
+            }
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Error al actualizar");
+            return false;
+        }finally{
+                try {
+                    if(con!=null) con.rollback();
+                    if(pstm!=null) pstm.close();
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+            
+        }
     }
     
 }
